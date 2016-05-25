@@ -13,11 +13,21 @@
 {% block primary_content %}
   <section class="module">
     <div class="module-content">
-        {% if c.form %}
-          {# CKAN < 2.3 #}
-          {{ c.form | safe }}
-        {% else %}
-          {{- h.snippet(form_snippet, c=c, **form_vars) -}}
+
+        {% if not h.organizations_available('create_dataset') %}
+            <p>{{ _('Before you can create a dataset you need to create an organization first.') }}</p>
+
+            <a class='btn btn-primary' href="{{ h.url_for(controller='organization', action='new') }}">
+                {{ _('Create a new organization') }}
+            </a>
+
+        {%  else %}
+            {% if c.form %}
+                {# CKAN < 2.3 #}
+                {{ c.form | safe }}
+            {% else %}
+                {{- h.snippet(form_snippet, c=c, **form_vars) -}}
+            {% endif %}
         {% endif %}
     </div>
   </section>
